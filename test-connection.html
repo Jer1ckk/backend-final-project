@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Backend Connection Test</title>
+</head>
+<body>
+    <h1>Backend Connection Test</h1>
+    <div id="status">Testing connection...</div>
+    <div id="results"></div>
+    
+    <script>
+        const API_BASE_URL = 'http://localhost:3001/api';
+        
+        async function testConnection() {
+            const statusDiv = document.getElementById('status');
+            const resultsDiv = document.getElementById('results');
+            
+            try {
+                console.log('Testing health endpoint...');
+                const response = await fetch(`${API_BASE_URL}/health`);
+                const data = await response.json();
+                
+                statusDiv.innerHTML = '✅ Backend is running!';
+                statusDiv.style.color = 'green';
+                
+                resultsDiv.innerHTML = `
+                    <h3>Backend Response:</h3>
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                    <p>Backend URL: <a href="${API_BASE_URL}/health" target="_blank">${API_BASE_URL}/health</a></p>
+                `;
+                
+            } catch (error) {
+                statusDiv.innerHTML = '❌ Cannot connect to backend!';
+                statusDiv.style.color = 'red';
+                
+                resultsDiv.innerHTML = `
+                    <h3>Error:</h3>
+                    <p>${error.message}</p>
+                    <h3>Troubleshooting:</h3>
+                    <ol>
+                        <li>Make sure backend is running: <code>cd backend && npm run dev</code></li>
+                        <li>Check if port 5001 is available</li>
+                        <li>Try opening: <a href="http://localhost:5001/api/health" target="_blank">http://localhost:5001/api/health</a></li>
+                    </ol>
+                `;
+            }
+        }
+        
+        // Test on page load
+        testConnection();
+    </script>
+</body>
+</html>
