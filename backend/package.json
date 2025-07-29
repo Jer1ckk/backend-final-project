@@ -6,9 +6,21 @@
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js",
-    "seed": "node seeders/massiveRandomSeeder.js",
-    "db:reset": "node seeders/massiveRandomSeeder.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "check-products": "node scripts/check-products.js",
+    "upload:women-tshirt": "node scripts/upload-women-tshirt.js",
+    "upload:women-skirt": "node scripts/upload-women-skirt.js",
+    "upload:women-trouser": "node scripts/upload-women-trouser.js",
+    "upload:women-shoes": "node scripts/upload-women-shoes.js",
+    "upload:women-shirt": "node scripts/upload-women-shirt.js",
+    "upload:women-jeans": "node scripts/upload-women-jeans.js",
+    "upload:women-shorts": "node scripts/upload-women-shorts.js",
+    "upload:women-jacket": "node scripts/upload-women-jacket.js",
+    "upload:men-shirt": "node scripts/upload-men-shirt.js",
+    "upload:men-tshirt": "node scripts/upload-men-tshirt.js",
+    "upload:men-jeans": "node scripts/upload-men-jeans.js",
+    "upload:men-trouser": "node scripts/upload-men-trouser.js",
+    "upload:men-shoes": "node scripts/upload-men-shoes.js",
+    "upload:men-jacket": "node scripts/upload-men-jacket.js"
   },
   "keywords": [
     "clothing",
