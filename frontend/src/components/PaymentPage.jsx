@@ -320,7 +320,7 @@ const PaymentPage = () => {
                 >
                   <User size={20} className="text-black" />
                   <span style={{ color: "#000", fontSize: "14px" }}>
-                    Hi, {user.name} (ID: {user.id})
+                    Hi, {user.name}
                   </span>
                 </div>
                 <button

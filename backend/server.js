@@ -18,8 +18,6 @@ const orderRoutes = require("./routes/orders");
 const userRoutes = require("./routes/users");
 const cartRoutes = require("./routes/cart");
 const paymentRoutes = require("./routes/payments");
-const testRoutes = require("./routes/test"); // Test routes for payment testing
-const debugRoutes = require("./routes/debug"); // Debug routes for development
 
 // New verification routes
 const userProfileRoutes = require("./routes/userProfile");
@@ -90,16 +88,10 @@ app.use("/api/orders", orderRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/payments", paymentRoutes);
-app.use("/api/test", testRoutes);
 
 // New verification routes
 app.use("/api/user", userProfileRoutes);
 app.use("/api/verification", orderVerificationRoutes);
-
-// Debug routes (development only)
-if (process.env.NODE_ENV === "development") {
-  app.use("/api/debug", debugRoutes);
-}
 
 // Health check endpoint
 app.get("/api/health", (req, res) => {

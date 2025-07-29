@@ -4,14 +4,9 @@
   "description": "Backend API for Clothing Store Website",
   "main": "server.js",
   "scripts": {
-
     "start": "node server.js",
     "dev": "nodemon server.js",
-    "dev:fixed": "nodemon server-fixed.js",
-    "server:fixed": "node server-fixed.js",
     "seed": "node seeders/massiveRandomSeeder.js",
-    "seed:massive": "node seeders/massiveRandomSeeder.js",
-    "seed:old": "node seeders/seed.js",
     "db:reset": "node seeders/massiveRandomSeeder.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
