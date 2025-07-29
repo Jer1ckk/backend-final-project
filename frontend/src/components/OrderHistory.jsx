@@ -1,39 +1,39 @@
 // Frontend: Order History Component
 // File: frontend/src/components/OrderHistory.jsx
 
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import '../styles/OrderHistory.css';
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import "../styles/OrderHistory.css";
 
 const OrderHistory = () => {
   const navigate = useNavigate();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [pagination, setPagination] = useState({});
   const [summary, setSummary] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
-  const [statusFilter, setStatusFilter] = useState('');
+  const [statusFilter, setStatusFilter] = useState("");
 
   // Get token and user data
   const getAuthToken = () => {
-    return localStorage.getItem('token') || sessionStorage.getItem('token');
+    return localStorage.getItem("token") || sessionStorage.getItem("token");
   };
 
   const getUserData = () => {
-    const userData = localStorage.getItem('user');
+    const userData = localStorage.getItem("user");
     return userData ? JSON.parse(userData) : null;
   };
 
   // Fetch order history
-  const fetchOrderHistory = async (page = 1, status = '') => {
+  const fetchOrderHistory = async (page = 1, status = "") => {
     try {
       const token = getAuthToken();
       const user = getUserData();
 
       if (!token || !user) {
-        setError('No authentication found. Please log in.');
+        setError("No authentication found. Please log in.");
         setLoading(false);
         return;
       }
@@ -41,20 +41,20 @@ const OrderHistory = () => {
       setLoading(true);
       const params = new URLSearchParams({
         page: page.toString(),
-        limit: '10'
+        limit: "10",
       });
 
       if (status) {
-        params.append('status', status);
+        params.append("status", status);
       }
 
       const response = await axios.get(
         `http://localhost:3001/api/verification/orders/${user.id}?${params}`,
         {
           headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          }
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
         }
       );
 
@@ -62,18 +62,18 @@ const OrderHistory = () => {
         setOrders(response.data.data.orders);
         setPagination(response.data.data.pagination);
         setSummary(response.data.data.summary);
-        setError('');
+        setError("");
       } else {
-        setError(response.data.message || 'Failed to fetch order history');
+        setError(response.data.message || "Failed to fetch order history");
       }
     } catch (error) {
-      console.error('Order history fetch error:', error);
+      console.error("Order history fetch error:", error);
       if (error.response?.status === 401) {
-        setError('Session expired. Please log in again.');
-        localStorage.removeItem('token');
-        sessionStorage.removeItem('token');
+        setError("Session expired. Please log in again.");
+        localStorage.removeItem("token");
+        sessionStorage.removeItem("token");
       } else {
-        setError('Failed to load order history. Please try again.');
+        setError("Failed to load order history. Please try again.");
       }
     } finally {
       setLoading(false);
@@ -95,30 +95,30 @@ const OrderHistory = () => {
 
   // Format date
   const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
+    return new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
     });
   };
 
   // Get status color
   const getStatusColor = (status) => {
     switch (status?.toLowerCase()) {
-      case 'completed':
-      case 'paid':
-        return '#27ae60';
-      case 'pending':
-        return '#f39c12';
-      case 'processing':
-        return '#3498db';
-      case 'cancelled':
-      case 'failed':
-        return '#e74c3c';
+      case "completed":
+      case "paid":
+        return "#27ae60";
+      case "pending":
+        return "#f39c12";
+      case "processing":
+        return "#3498db";
+      case "cancelled":
+      case "failed":
+        return "#e74c3c";
       default:
-        return '#7f8c8d';
+        return "#7f8c8d";
     }
   };
 
@@ -158,7 +158,9 @@ const OrderHistory = () => {
             <div className="summary-label">Total Orders</div>
           </div>
           <div className="summary-card">
-            <div className="summary-number">${summary.totalSpent || '0.00'}</div>
+            <div className="summary-number">
+              ${summary.totalSpent || "0.00"}
+            </div>
             <div className="summary-label">Total Spent</div>
           </div>
           <div className="summary-card">
@@ -169,7 +171,9 @@ const OrderHistory = () => {
           </div>
           <div className="summary-card">
             <div className="summary-number">
-              {summary.lastOrderDate ? formatDate(summary.lastOrderDate) : 'N/A'}
+              {summary.lastOrderDate
+                ? formatDate(summary.lastOrderDate)
+                : "N/A"}
             </div>
             <div className="summary-label">Last Order</div>
           </div>
@@ -181,32 +185,40 @@ const OrderHistory = () => {
         <h3>Filter by Status:</h3>
         <div className="filter-buttons">
           <button
-            className={`filter-btn ${statusFilter === '' ? 'active' : ''}`}
-            onClick={() => handleStatusFilter('')}
+            className={`filter-btn ${statusFilter === "" ? "active" : ""}`}
+            onClick={() => handleStatusFilter("")}
           >
             All Orders
           </button>
           <button
-            className={`filter-btn ${statusFilter === 'pending' ? 'active' : ''}`}
-            onClick={() => handleStatusFilter('pending')}
+            className={`filter-btn ${
+              statusFilter === "pending" ? "active" : ""
+            }`}
+            onClick={() => handleStatusFilter("pending")}
           >
             Pending
           </button>
           <button
-            className={`filter-btn ${statusFilter === 'processing' ? 'active' : ''}`}
-            onClick={() => handleStatusFilter('processing')}
+            className={`filter-btn ${
+              statusFilter === "processing" ? "active" : ""
+            }`}
+            onClick={() => handleStatusFilter("processing")}
           >
             Processing
           </button>
           <button
-            className={`filter-btn ${statusFilter === 'completed' ? 'active' : ''}`}
-            onClick={() => handleStatusFilter('completed')}
+            className={`filter-btn ${
+              statusFilter === "completed" ? "active" : ""
+            }`}
+            onClick={() => handleStatusFilter("completed")}
           >
             Completed
           </button>
           <button
-            className={`filter-btn ${statusFilter === 'cancelled' ? 'active' : ''}`}
-            onClick={() => handleStatusFilter('cancelled')}
+            className={`filter-btn ${
+              statusFilter === "cancelled" ? "active" : ""
+            }`}
+            onClick={() => handleStatusFilter("cancelled")}
           >
             Cancelled
           </button>
@@ -232,19 +244,27 @@ const OrderHistory = () => {
                 <div className="order-header">
                   <div className="order-number">
                     <h3>#{order.orderNumber}</h3>
-                    <span className="order-date">{formatDate(order.createdAt)}</span>
+                    <span className="order-date">
+                      {formatDate(order.createdAt)}
+                    </span>
                   </div>
                   <div className="order-status">
                     <span
                       className="status-badge"
-                      style={{ backgroundColor: getStatusColor(order.orderStatus) }}
+                      style={{
+                        backgroundColor: getStatusColor(order.orderStatus),
+                      }}
                     >
                       {order.orderStatus}
                     </span>
                     {order.payment && (
                       <span
                         className="payment-badge"
-                        style={{ backgroundColor: getStatusColor(order.payment.paymentStatus) }}
+                        style={{
+                          backgroundColor: getStatusColor(
+                            order.payment.paymentStatus
+                          ),
+                        }}
                       >
                         {order.payment.paymentStatus}
                       </span>
@@ -259,15 +279,62 @@ const OrderHistory = () => {
                       {order.orderItems?.slice(0, 3).map((item) => (
                         <div key={item.id} className="item-preview">
                           <div className="item-image">
-                            {item.product?.image ? (
-                              <img src={item.product.image} alt={item.product.name} />
-                            ) : (
-                              <div className="no-image">📦</div>
-                            )}
+                            {(() => {
+                              // Helper function to safely get product image
+                              const getProductImage = (product) => {
+                                if (!product) return null;
+
+                                // Try parsing images array first
+                                if (product.images) {
+                                  try {
+                                    const parsedImages = JSON.parse(
+                                      product.images
+                                    );
+                                    if (
+                                      Array.isArray(parsedImages) &&
+                                      parsedImages.length > 0
+                                    ) {
+                                      return parsedImages[0];
+                                    }
+                                  } catch (e) {
+                                    // If parsing fails, continue to fallback
+                                  }
+                                }
+
+                                // Fallback to single image property
+                                return product.image || null;
+                              };
+
+                              const imageUrl = getProductImage(item.product);
+
+                              return imageUrl ? (
+                                <img
+                                  src={imageUrl}
+                                  alt={item.product?.name || "Product"}
+                                  onError={(e) => {
+                                    e.target.style.display = "none";
+                                    e.target.nextSibling.style.display =
+                                      "block";
+                                  }}
+                                />
+                              ) : (
+                                <div className="no-image">📦</div>
+                              );
+                            })()}
+                            <div
+                              className="no-image"
+                              style={{ display: "none" }}
+                            >
+                              📦
+                            </div>
                           </div>
                           <div className="item-info">
-                            <span className="item-name">{item.product?.name}</span>
-                            <span className="item-quantity">Qty: {item.quantity}</span>
+                            <span className="item-name">
+                              {item.product?.name}
+                            </span>
+                            <span className="item-quantity">
+                              Qty: {item.quantity}
+                            </span>
                           </div>
                         </div>
                       ))}
@@ -282,11 +349,15 @@ const OrderHistory = () => {
                   <div className="order-summary">
                     <div className="order-total">
                       <span className="total-label">Total:</span>
-                      <span className="total-amount">${parseFloat(order.total).toFixed(2)}</span>
+                      <span className="total-amount">
+                        ${parseFloat(order.total).toFixed(2)}
+                      </span>
                     </div>
                     {order.payment && (
                       <div className="payment-info">
-                        <span className="payment-method">{order.payment.paymentMethod}</span>
+                        <span className="payment-method">
+                          {order.payment.paymentMethod}
+                        </span>
                         {order.payment.transactionId && (
                           <span className="transaction-id">
                             ID: {order.payment.transactionId.substring(0, 8)}...
@@ -304,15 +375,12 @@ const OrderHistory = () => {
                   >
                     📋 View Details
                   </button>
-                  {order.orderStatus === 'completed' && (
-                    <button className="reorder-btn">
-                      🔄 Reorder
-                    </button>
+                  {order.orderStatus === "completed" && (
+                    <button className="reorder-btn">🔄 Reorder</button>
                   )}
-                  {(order.orderStatus === 'pending' || order.orderStatus === 'processing') && (
-                    <button className="cancel-btn">
-                      ❌ Cancel
-                    </button>
+                  {(order.orderStatus === "pending" ||
+                    order.orderStatus === "processing") && (
+                    <button className="cancel-btn">❌ Cancel</button>
                   )}
                 </div>
               </div>
@@ -331,11 +399,16 @@ const OrderHistory = () => {
               </button>
 
               <div className="page-numbers">
-                {Array.from({ length: pagination.totalPages }, (_, i) => i + 1).map(page => (
+                {Array.from(
+                  { length: pagination.totalPages },
+                  (_, i) => i + 1
+                ).map((page) => (
                   <button
                     key={page}
                     onClick={() => handlePageChange(page)}
-                    className={`page-number ${currentPage === page ? 'active' : ''}`}
+                    className={`page-number ${
+                      currentPage === page ? "active" : ""
+                    }`}
                   >
                     {page}
                   </button>
@@ -357,10 +430,7 @@ const OrderHistory = () => {
           <div className="no-orders-icon">🛍️</div>
           <h3>No Orders Found</h3>
           <p>You haven't placed any orders yet.</p>
-          <button
-            onClick={() => navigate('/')}
-            className="start-shopping-btn"
-          >
+          <button onClick={() => navigate("/")} className="start-shopping-btn">
             Start Shopping
           </button>
         </div>
@@ -369,7 +439,10 @@ const OrderHistory = () => {
       {/* Database Verification Notice */}
       <div className="db-notice">
         <h4>🗄️ Database Verification</h4>
-        <p>All order data shown above is verified and stored in our secure MySQL database.</p>
+        <p>
+          All order data shown above is verified and stored in our secure MySQL
+          database.
+        </p>
         <p>Data is automatically synchronized and checked for consistency.</p>
       </div>
     </div>

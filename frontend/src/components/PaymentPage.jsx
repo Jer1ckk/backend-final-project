@@ -22,6 +22,35 @@ const PaymentPage = () => {
   const navigate = useNavigate();
   const { id } = useParams();
 
+  // Helper function to safely get the first image
+  const getProductImage = (product) => {
+    if (!product) return null;
+
+    // If images is already an array
+    if (Array.isArray(product.images) && product.images.length > 0) {
+      return product.images[0];
+    }
+
+    // If images is a JSON string
+    if (typeof product.images === "string") {
+      try {
+        const parsedImages = JSON.parse(product.images);
+        if (Array.isArray(parsedImages) && parsedImages.length > 0) {
+          return parsedImages[0];
+        }
+      } catch (e) {
+        console.warn("Failed to parse product images:", e);
+      }
+    }
+
+    // Fallback to single image property
+    if (product.image) {
+      return product.image;
+    }
+
+    return null;
+  };
+
   // Product and order state
   const [product, setProduct] = useState(null);
   const [quantity, setQuantity] = useState(1);
@@ -400,9 +429,39 @@ const PaymentPage = () => {
               alignItems: "center",
               justifyContent: "center",
               border: "1px solid #ddd",
+              borderRadius: "12px",
+              overflow: "hidden",
             }}
           >
-            <span>Product Image</span>
+            {getProductImage(product) ? (
+              <img
+                src={getProductImage(product)}
+                alt={product.name}
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                }}
+                onError={(e) => {
+                  e.target.style.display = "none";
+                  e.target.nextSibling.style.display = "flex";
+                }}
+              />
+            ) : (
+              <span>Product Image</span>
+            )}
+            <div
+              style={{
+                display: "none",
+                width: "100%",
+                height: "100%",
+                alignItems: "center",
+                justifyContent: "center",
+                color: "#666",
+              }}
+            >
+              <span>No Image Available</span>
+            </div>
           </div>
           {(product.onSale || product.discount > 0) && (
             <div className="sale-badge-large">SALE</div>
@@ -529,9 +588,39 @@ const PaymentPage = () => {
                 justifyContent: "center",
                 border: "1px solid #ddd",
                 borderRadius: "8px",
+                overflow: "hidden",
               }}
             >
-              <span style={{ fontSize: "12px" }}>Image</span>
+              {getProductImage(product) ? (
+                <img
+                  src={getProductImage(product)}
+                  alt={product.name}
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "cover",
+                  }}
+                  onError={(e) => {
+                    e.target.style.display = "none";
+                    e.target.nextSibling.style.display = "flex";
+                  }}
+                />
+              ) : (
+                <span style={{ fontSize: "12px" }}>Image</span>
+              )}
+              <div
+                style={{
+                  display: "none",
+                  width: "100%",
+                  height: "100%",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontSize: "10px",
+                  color: "#666",
+                }}
+              >
+                <span>No Image</span>
+              </div>
             </div>
             <div className="summary-product-details">
               <h3>{product.name}</h3>
@@ -1045,9 +1134,39 @@ const PaymentPage = () => {
                     justifyContent: "center",
                     border: "1px solid #ddd",
                     borderRadius: "8px",
+                    overflow: "hidden",
                   }}
                 >
-                  <span style={{ fontSize: "10px" }}>Image</span>
+                  {getProductImage(product) ? (
+                    <img
+                      src={getProductImage(product)}
+                      alt={product.name}
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "cover",
+                      }}
+                      onError={(e) => {
+                        e.target.style.display = "none";
+                        e.target.nextSibling.style.display = "flex";
+                      }}
+                    />
+                  ) : (
+                    <span style={{ fontSize: "10px" }}>Image</span>
+                  )}
+                  <div
+                    style={{
+                      display: "none",
+                      width: "100%",
+                      height: "100%",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      fontSize: "8px",
+                      color: "#666",
+                    }}
+                  >
+                    <span>No Image</span>
+                  </div>
                 </div>
                 <div className="order-item-info">
                   <p>
